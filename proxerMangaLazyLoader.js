@@ -4,7 +4,7 @@
 // @version      0.1
 // @description  Lazy load manga images and reload them on user action
 // @author       Xylian
-// @match        https://proxer.net/chapter/[\d]*/[\d]*/(de)|(en)
+// @match        https://proxer.net/read/*/*/*
 // @grant        none
 // ==/UserScript==
 
