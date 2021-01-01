@@ -5,7 +5,8 @@
 // @description  Lazy load manga images and reload them on user action
 // @author       Xylian
 // @match        https://proxer.net/read/*/*/*
-// @grant        none
+// @grant 		 GM_setValue
+// @grant 		 GM_getValue
 // ==/UserScript==
 
 (function() {
@@ -21,22 +22,25 @@
 			obj.attr("src", "");
 		});
 
+		/*
 		// prepare reload button
-		$reader = $("#reader");
+		var $reader = $("#reader");
 		$reader.css("position", "relative");
 		$reader.append('<div id="reader_reloader" style="display: none;">&#8635;</div>');
-		$reader_reloader = $("#reader_reloader");
+		var $reader_reloader = $("#reader_reloader");
 		$reader_reloader.css("position", "absolute");
 		$reader_reloader.css("z-index", "1");
 		$reader_reloader.css("top", "0");
 		$reader_reloader.css("left", "0");
 		$reader_reloader.css("bottom", "0");
 		$reader_reloader.css("right", "0");
-		$reader_reloader.css("background", "#ffffff11");
+		$reader_reloader.css("background", "rgba(0, 0, 0, 0.9)");
 		$reader_reloader.css("font-family", "Lucida Sans Unicode");
-		$reader_reloader.css("font-size", "20px");
+		$reader_reloader.css("font-size", "60px");
 		$reader_reloader.css("text-align", "center");
 		$reader_reloader.css("padding-top", "40px");
+		$reader_reloader.css("cursor", "pointer");
+		*/
 		
 		
 		// function for reloading all missing images
@@ -44,25 +48,35 @@
 		function loadAllImages($images) {
 			if(loadAllImages_isReady) {
 				loadAllImages_isReady = false;
-
+				
 				var index = 0;
 				$images.each(function() {
 					var img = this;
+					$(img).attr("src", "");
 					
-					img.onload = function() {
-						$(img).addClass("loaded");
+					var loadNextImage = function () {
 						if(index < $images.length) {
-							$images[index +1].src = $($images[index +1]).attr("data-src");
+							setTimeout(() => {
+								var obj = $($images[index +1]);
+								obj.attr("src", obj.attr("data-src") );
+							}, 400);
 						}
 					}
-	
+
+					img.onload = function() {
+						$(img).addClass("loaded");
+						$(img).removeClass("error");
+						loadNextImage();
+					}
+					
 					img.onerror = function() {
 						$(img).addClass("error");
 						$(img).removeClass("loaded");
-						$reader_reloader.show();
+						loadNextImage();
+						// $reader_reloader.show();
 					}
 					
-					if(index === 0) img.src = $(img).attr("data-src");
+					if(index === 0) $(img).attr("src", $(img).attr("data-src") );
 	
 					index++;
 				});
@@ -73,10 +87,18 @@
 
 		// start the lazy loader
 		loadAllImages( $("#reader img:not(.loaded)") );
+		/*
 		$reader_reloader.on("click", function() {
 			loadAllImages( $("#reader img.error") );
 			$reader_reloader.hide();
 		});
+		*/
+		
+		// auto reload all error images
+		setInterval(() => {
+			loadAllImages( $("#reader img.error") );
+		}, 2000);
+
 	}
 	
 })();
