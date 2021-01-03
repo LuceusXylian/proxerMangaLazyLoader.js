@@ -41,19 +41,19 @@
 		$reader_reloader.css("padding-top", "40px");
 		$reader_reloader.css("cursor", "pointer");
 		*/
-		
-		
+
+
 		// function for reloading all missing images
 		var loadAllImages_isReady = true;
 		function loadAllImages($images) {
 			if(loadAllImages_isReady) {
 				loadAllImages_isReady = false;
-				
+
 				var index = 0;
 				$images.each(function() {
 					var img = this;
 					$(img).attr("src", "");
-					
+
 					var loadNextImage = function () {
 						if(index < $images.length) {
 							setTimeout(() => {
@@ -68,18 +68,18 @@
 						$(img).removeClass("error");
 						loadNextImage();
 					}
-					
+
 					img.onerror = function() {
 						$(img).addClass("error");
 						$(img).removeClass("loaded");
 						loadNextImage();
 						// $reader_reloader.show();
 					}
-					
-					if(index === 0) $(img).attr("src", $(img).attr("data-src") );
-	
+
 					index++;
 				});
+
+                if(index > 0) $(img).attr("src", $(img).attr("data-src") );
 
 				loadAllImages_isReady = true;
 			}
@@ -93,12 +93,12 @@
 			$reader_reloader.hide();
 		});
 		*/
-		
+
 		// auto reload all error images
 		setInterval(() => {
 			loadAllImages( $("#reader img.error") );
 		}, 2000);
 
 	}
-	
+
 })();
