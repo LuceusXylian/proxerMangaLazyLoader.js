@@ -84,21 +84,24 @@
 				loadAllImages_isReady = true;
 			}
 		}
+	
+    	}
+	
+	// start the lazy loader
+	loadAllImages( $("#reader img:not(.loaded)") );
+	/*
+	$reader_reloader.on("click", function() {
+		loadAllImages( $("#reader img.error") );
+		$reader_reloader.hide();
+	});
+	*/
+	
+	
+	// auto reload all error images
+	setInterval(() => {
+		loadAllImages( $("#reader img.error") );
+	}, 2000);
 
-		// start the lazy loader
-		loadAllImages( $("#reader img:not(.loaded)") );
-		/*
-		$reader_reloader.on("click", function() {
-			loadAllImages( $("#reader img.error") );
-			$reader_reloader.hide();
-		});
-		*/
-
-		// auto reload all error images
-		setInterval(() => {
-			loadAllImages( $("#reader img.error") );
-		}, 2000);
-
-	}
+	
 
 })();
